@@ -454,6 +454,7 @@ case object FeatureSparkTypes {
       FeatureTypeSparkConverter.toSpark(f(arr))
     }
     UserDefinedFunction(func, outputType, inputTypes = None)
+
   }
 
   /**

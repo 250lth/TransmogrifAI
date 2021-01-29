@@ -4,7 +4,7 @@ buildscript {
         maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
-        classpath 'org.github.ngbinh.scalastyle:gradle-scalastyle-plugin_2.11:1.0.1'
+        classpath 'org.github.ngbinh.scalastyle:gradle-scalastyle-plugin_2.12:2.1.0'
         classpath 'com.commercehub.gradle.plugin:gradle-avro-plugin:0.16.0'
     }
 }
@@ -34,10 +34,10 @@ targetCompatibility = JavaVersion.VERSION_1_8
 mainClassName = "please.set.main.class.in.build.gradle"
 
 ext {
-    scalaVersion = '2.11'
-    scalaVersionRevision = '12'
+    scalaVersion = '2.12'
+    scalaVersionRevision = '13'
     junitVersion = '4.12'
-    sparkVersion = '2.4.5'
+    sparkVersion = '3.0.1'
     scalatestVersion = '3.0.0'
     transmogrifaiVersion ='0.7.0'
     collectionsVersion = '3.2.2'
@@ -91,7 +91,7 @@ configurations.all {
 }
 configurations.zinc {
     resolutionStrategy {
-        force 'org.scala-lang:scala-library:2.10.6', 'org.scala-lang:scala-reflect:2.10.6'
+        force "org.scala-lang:scala-library:$scalaVersion.$scalaVersionRevision", "org.scala-lang:scala-reflect:$scalaVersion.$scalaVersionRevision"
     }
 }
 
@@ -119,11 +119,11 @@ shadowJar {
 
 scalaStyle {
     configLocation = "${rootProject.projectDir}/gradle/scalastyle-config.xml"
-    includeTestSourceDirectory = true
+    includeTestSourceDirectory = false
     source = "src/main/scala"
     testSource = "src/test/scala"
 }
-compileScala.dependsOn(scalaStyle)
+//compileScala.dependsOn(scalaStyle)
 
 avro {
     createSetters = true

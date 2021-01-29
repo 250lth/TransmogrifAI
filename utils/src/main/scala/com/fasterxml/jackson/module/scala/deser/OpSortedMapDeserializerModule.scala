@@ -47,9 +47,11 @@ private class SortedMapBuilderWrapper[K, V](val builder: mutable.Builder[(K, V),
 }
 
 private object SortedMapDeserializer {
-  def orderingFor = OrderingLocator.locate _
+  def orderingFor: JavaType => Ordering[AnyRef] = OrderingLocator.locate _
 
   def builderFor(cls: Class[_], keyCls: JavaType): mutable.Builder[(AnyRef, AnyRef), SortedMap[AnyRef, AnyRef]] =
+    //if (classOf[TreeMap[_, _]].isAssignableFrom(cls)) TreeMap.newBuilder[AnyRef, AnyRef](orderingFor(keyCls)) else
+    //  SortedMap.newBuilder[AnyRef, AnyRef](orderingFor(keyCls))
     if (classOf[TreeMap[_, _]].isAssignableFrom(cls)) TreeMap.newBuilder[AnyRef, AnyRef](orderingFor(keyCls)) else
       SortedMap.newBuilder[AnyRef, AnyRef](orderingFor(keyCls))
 }
@@ -68,7 +70,7 @@ private class SortedMapDeserializer(
 
   private val instantiator =
     new ValueInstantiator {
-      def getValueTypeDesc = collectionType.getRawClass.getCanonicalName
+      override def getValueTypeDesc = collectionType.getRawClass.getCanonicalName
 
       override def canCreateUsingDefault = true
 

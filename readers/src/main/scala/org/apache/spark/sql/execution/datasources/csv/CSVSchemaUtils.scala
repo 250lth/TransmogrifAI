@@ -32,6 +32,8 @@ package org.apache.spark.sql.execution.datasources.csv
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types.StructType
+import org.apache.spark.sql.catalyst.csv.CSVOptions
+import org.apache.spark.sql.catalyst.csv.CSVInferSchema
 
 case object CSVSchemaUtils {
 
@@ -56,12 +58,13 @@ case object CSVSchemaUtils {
     options: com.salesforce.op.utils.io.csv.CSVOptions,
     columnPruning: Boolean = true
   ): StructType = {
-    val opts = new org.apache.spark.sql.execution.datasources.csv.CSVOptions(
+    val opts = new CSVOptions(
       parameters = options.copy(header = false).toSparkCSVOptionsMap + ("inferSchema" -> true.toString),
       columnPruning = columnPruning,
       defaultTimeZoneId = "GMT"
     )
-    CSVInferSchema.infer(rdd, header.toArray, opts)
+    val inferSchema = new CSVInferSchema(opts)
+    inferSchema.infer(rdd, header.toArray)
   }
 
 }

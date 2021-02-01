@@ -37,7 +37,7 @@ import com.salesforce.op.utils.spark.RichDataType._
 import org.apache.spark.ml.linalg.SQLDataTypes._
 import org.apache.spark.sql.catalyst.encoders.ExpressionEncoder
 import org.apache.spark.sql.expressions.UserDefinedFunction
-import org.apache.spark.sql.functions.column
+import org.apache.spark.sql.functions.{column, udf}
 import org.apache.spark.sql.types.{StructType, _}
 import org.apache.spark.sql.{Column, Encoder, Row, TypedColumn}
 
@@ -266,7 +266,7 @@ case object FeatureSparkTypes {
     val inputTypes = Some(FeatureSparkTypes.sparkTypeOf[I] :: Nil)
     val outputType = FeatureSparkTypes.sparkTypeOf[O]
     val func = transform1[I, O](f)
-    UserDefinedFunction(func, outputType, inputTypes)
+    udf(func)
   }
 
   /**
@@ -303,7 +303,7 @@ case object FeatureSparkTypes {
     val inputTypes = Some(FeatureSparkTypes.sparkTypeOf[I1] :: FeatureSparkTypes.sparkTypeOf[I2] :: Nil)
     val outputType = FeatureSparkTypes.sparkTypeOf[O]
     val func = transform2[I1, I2, O](f)
-    UserDefinedFunction(func, outputType, inputTypes)
+    udf(func)
   }
 
   /**
@@ -348,7 +348,7 @@ case object FeatureSparkTypes {
     )
     val outputType = FeatureSparkTypes.sparkTypeOf[O]
     val func = transform3[I1, I2, I3, O](f)
-    UserDefinedFunction(func, outputType, inputTypes)
+    udf(func)
   }
 
   /**
@@ -398,7 +398,7 @@ case object FeatureSparkTypes {
     )
     val outputType = FeatureSparkTypes.sparkTypeOf[O]
     val func = transform4[I1, I2, I3, I4, O](f)
-    UserDefinedFunction(func, outputType, inputTypes)
+    udf(func)
   }
 
   /**
@@ -453,7 +453,7 @@ case object FeatureSparkTypes {
       }
       FeatureTypeSparkConverter.toSpark(f(arr))
     }
-    UserDefinedFunction(func, outputType, inputTypes = None)
+    udf(func)
 
   }
 
@@ -508,7 +508,7 @@ case object FeatureSparkTypes {
       }
       FeatureTypeSparkConverter.toSpark(f(i1, arr))
     }
-    UserDefinedFunction(func, outputType, inputTypes = None)
+    udf(func)
   }
 
   /**

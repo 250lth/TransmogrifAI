@@ -117,8 +117,8 @@ private[op] class OpBinaryClassificationEvaluator
 
       val confusionMatrixByThreshold = sparkMLMetrics.confusionMatrixByThreshold().collect()
       val (copiedTupPos, copiedTupNeg) = confusionMatrixByThreshold.map { case (_, confusionMatrix) =>
-          ((confusionMatrix.numTruePositives, confusionMatrix.numFalsePositives),
-            (confusionMatrix.numTrueNegatives, confusionMatrix.numFalseNegatives))
+          ((confusionMatrix.weightedTruePositives, confusionMatrix.weightedFalsePositives),
+            (confusionMatrix.weightedTrueNegatives, confusionMatrix.weightedFalseNegatives))
         }.unzip
       val (tpByThreshold, fpByThreshold) = copiedTupPos.unzip
       val (tnByThreshold, fnByThreshold) = copiedTupNeg.unzip
@@ -231,11 +231,11 @@ case class BinaryThresholdMetrics
   @JsonDeserialize(contentAs = classOf[java.lang.Double])
   falsePositiveRateByThreshold: Seq[Double],
   @JsonDeserialize(contentAs = classOf[java.lang.Long])
-  truePositivesByThreshold: Seq[Long],
+  truePositivesByThreshold: Seq[Double],
   @JsonDeserialize(contentAs = classOf[java.lang.Long])
-  falsePositivesByThreshold: Seq[Long],
+  falsePositivesByThreshold: Seq[Double],
   @JsonDeserialize(contentAs = classOf[java.lang.Long])
-  trueNegativesByThreshold: Seq[Long],
+  trueNegativesByThreshold: Seq[Double],
   @JsonDeserialize(contentAs = classOf[java.lang.Long])
-  falseNegativesByThreshold: Seq[Long]
+  falseNegativesByThreshold: Seq[Double]
 )
